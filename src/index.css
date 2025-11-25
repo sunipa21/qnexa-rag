@@ -562,6 +562,132 @@ body {
   background: #cbd5e1;
 }
 
+/* Voice Input Styles */
+.voice-input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.voice-button {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%);
+  color: white;
+  box-shadow: 0 2px 8px rgba(236, 72, 153, 0.3);
+  align-self: center;
+}
+
+.voice-button:hover:not(:disabled) {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(236, 72, 153, 0.4);
+}
+
+.voice-button:active:not(:disabled) {
+  transform: scale(0.95);
+}
+
+.voice-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.voice-button.listening {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  animation: pulse-glow 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse-glow {
+
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+    transform: scale(1);
+  }
+
+  50% {
+    box-shadow: 0 0 0 8px rgba(239, 68, 68, 0);
+    transform: scale(1.05);
+  }
+}
+
+.voice-transcript-preview {
+  position: absolute;
+  bottom: calc(100% + 0.5rem);
+  left: 0;
+  background: white;
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--border-color);
+  max-width: 300px;
+  animation: slideInUp 0.2s ease-out;
+  z-index: 10;
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.transcript-text {
+  font-size: 0.875rem;
+  color: var(--text-color);
+  display: inline;
+}
+
+.blinking-cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1em;
+  background: var(--primary-color);
+  margin-left: 2px;
+  animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0;
+  }
+}
+
+.voice-error {
+  position: absolute;
+  bottom: calc(100% + 0.5rem);
+  left: 0;
+  background: #fef2f2;
+  color: #dc2626;
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--radius-md);
+  font-size: 0.8rem;
+  border: 1px solid #fca5a5;
+  box-shadow: var(--shadow-sm);
+  animation: slideInUp 0.2s ease-out;
+  white-space: nowrap;
+  z-index: 10;
+}
+
+
 /* Knowledge Base Styles */
 .kb-toggle-section {
   padding: 1rem;

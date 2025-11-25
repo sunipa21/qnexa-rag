@@ -8,6 +8,7 @@ import { OllamaProvider } from '../services/llm/ollama';
 import { knowledgeBase } from '../services/knowledge-base';
 import { searchDuckDuckGo, detectSearchIntent, extractUrls } from '../services/web-search';
 import { fetchUrlContent, getDomainFromUrl } from '../services/web-scraper';
+import { VoiceInput } from './VoiceInput';
 
 interface ChatInterfaceProps {
     config: LLMConfig;
@@ -36,6 +37,7 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({ config, useKnowled
     const [input, setInput] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [webStatus, setWebStatus] = useState<string>('');
+    const [voiceInterimTranscript, setVoiceInterimTranscript] = useState<string>('');
     const messagesEndRef = useRef<HTMLDivElement>(null);
 
     const scrollToBottom = () => {
@@ -46,11 +48,12 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({ config, useKnowled
         scrollToBottom();
     }, [messages, webStatus, isLoading]);
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        if (!input.trim() || isLoading) return;
+    const handleSubmit = async (e?: React.FormEvent, messageText?: string) => {
+        e?.preventDefault();
+        const textToSend = messageText || input;
+        if (!textToSend.trim() || isLoading) return;
 
-        const userMessage: LLMMessage = { role: 'user', content: input };
+        const userMessage: LLMMessage = { role: 'user', content: textToSend };
         setMessages(prev => [...prev, userMessage]);
         setInput('');
         setIsLoading(true);
@@ -70,7 +73,7 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({ config, useKnowled
             // Auto-fetch URLs and web search if knowledge base is enabled
             if (useKnowledgeBase) {
                 // Check for URLs in the message
-                const urls = extractUrls(input);
+                const urls = extractUrls(textToSend);
                 if (urls.length > 0) {
                     for (const url of urls.slice(0, 2)) { // Limit to 2 URLs
                         try {
@@ -92,10 +95,10 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({ config, useKnowled
                 }
 
                 // Check for search intent
-                if (detectSearchIntent(input)) {
+                if (detectSearchIntent(textToSend)) {
                     setWebStatus('Searching the web...');
                     try {
-                        const searchResults = await searchDuckDuckGo(input, 3);
+                        const searchResults = await searchDuckDuckGo(textToSend, 3);
                         setWebStatus(`Fetching ${searchResults.length} search results...`);
 
                         for (const result of searchResults) {
@@ -119,7 +122,7 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({ config, useKnowled
                 }
 
                 // Search knowledge base if enabled
-                const relevantChunks = await knowledgeBase.searchDocuments(input, 3);
+                const relevantChunks = await knowledgeBase.searchDocuments(textToSend, 3);
                 if (relevantChunks.length > 0) {
                     const context = relevantChunks.join('\n\n---\n\n');
                     const systemMessage: LLMMessage = {
@@ -160,6 +163,17 @@ If the sources don't contain relevant information, you may use your general know
             setIsLoading(false);
             setWebStatus('');
         }
+    };
+
+    const handleVoiceTranscript = (transcript: string) => {
+        if (transcript.trim()) {
+            setVoiceInterimTranscript(''); // Clear interim when final transcript received
+            handleSubmit(undefined, transcript);
+        }
+    };
+
+    const handleVoiceInterimTranscript = (transcript: string) => {
+        setVoiceInterimTranscript(transcript);
     };
 
     return (
@@ -207,20 +221,28 @@ If the sources don't contain relevant information, you may use your general know
 
             <div className="input-area">
                 <form onSubmit={handleSubmit} className="input-form">
+                    <VoiceInput
+                        onTranscript={handleVoiceTranscript}
+                        onInterimTranscript={handleVoiceInterimTranscript}
+                        disabled={isLoading}
+                    />
                     <textarea
-                        value={input}
-                        onChange={(e) => setInput(e.target.value)}
+                        value={voiceInterimTranscript || input}
+                        onChange={(e) => {
+                            setInput(e.target.value);
+                            setVoiceInterimTranscript(''); // Clear voice transcript if user types
+                        }}
                         onKeyDown={(e) => {
                             if (e.key === 'Enter' && !e.shiftKey) {
                                 e.preventDefault();
                                 handleSubmit(e);
                             }
                         }}
-                        placeholder="Type a message..."
+                        placeholder="Type a message or use voice..."
                         disabled={isLoading}
                         rows={1}
                     />
-                    <button type="submit" className="send-button" disabled={isLoading || !input.trim()}>
+                    <button type="submit" className="send-button" disabled={isLoading || (!input.trim() && !voiceInterimTranscript.trim())}>
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="20" height="20">
                             <path d="M22 2L11 13" />
                             <path d="M22 2L15 22L11 13L2 9L22 2Z" />
