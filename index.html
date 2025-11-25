@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ai-knowledge-app</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+    
+    <!-- Debug script to check if JavaScript is running -->
+    <script>
+      console.log('HTML loaded successfully');
+      setTimeout(() => {
+        const root = document.getElementById('root');
+        console.log('Root element:', root);
+        console.log('Root innerHTML:', root?.innerHTML);
+        console.log('Root children:', root?.children);
+      }, 2000);
+    </script>
+  </body>
+</html>
