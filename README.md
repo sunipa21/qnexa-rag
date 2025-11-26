@@ -8,7 +8,7 @@ Built with **React 19**, **TypeScript**, and **Vite**, Qnexa AI offers a premium
 
 Check out the application in action:
 
-<video src="https://github.com/user-attachments/assets/fe37707c-db14-4673-9e15-5e4d52d1d2da" controls="controls" controlsList="nodownload" style="max-width: 100%;">
+<video src="https://youtu.be/m8MbVdiHYt8" controls="controls" controlsList="nodownload" style="max-width: 100%;">
 </video>
 
 ## ✨ Key Features
