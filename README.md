@@ -71,15 +71,9 @@ export default defineConfig([
   },
 ])
 ```
-<details>
-  <summary>Click to view Configuration/Settings Screenshots</summary>
-  
-  <br>
-  <strong>Hugging Face Settings:</strong><br>
-  <img src="https://github.com/user-attachments/assets/08c31ca7-5af0-4d86-a836-53851bbf7918" width="800">
-  
-  <br><br>
-  
-  <strong>Ollama Settings:</strong><br>
-  <img src="https://github.com/user-attachments/assets/af46189d-c553-4d31-a1a4-040b48374f94" width="800">
-</details>
+### Application
+![Application](https://github.com/user-attachments/assets/c4f0fbe8-d8a9-4c98-a2ed-693f73ae942f)
+
+### Settings
+![Settings_Huggingface](https://github.com/user-attachments/assets/08c31ca7-5af0-4d86-a836-53851bbf7918)
+![Settings_Ollama](https://github.com/user-attachments/assets/af46189d-c553-4d31-a1a4-040b48374f94)
