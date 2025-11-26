@@ -101,10 +101,3 @@ Access the **Settings** panel by clicking the gear icon in the application.
 ![Settings_Huggingface](https://github.com/user-attachments/assets/08c31ca7-5af0-4d86-a836-53851bbf7918)
 ![Settings_Ollama](https://github.com/user-attachments/assets/af46189d-c553-4d31-a1a4-040b48374f94)
 
-## 🤝 Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-## 📄 License
-
-This project is licensed under the MIT License.
