@@ -1,84 +1,110 @@
+# Qnexa AI - The Central Nexus for Intelligent Queries
 
-# React + TypeScript + Vite
+**Qnexa AI** is a powerful, privacy-focused Knowledge Management Application that serves as a central hub for your intelligent queries. It seamlessly integrates multiple Large Language Model (LLM) providers—including OpenAI, Google Gemini, and local Ollama instances—into a unified, modern interface.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Built with **React 19**, **TypeScript**, and **Vite**, Qnexa AI offers a premium user experience with features like voice interaction, document processing, and vector-based semantic search, all while keeping your API keys and data secure on your local device.
 
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
-
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
-### Application
 ## 🎥 Project Demo
+
 Check out the application in action:
 
 <video src="https://github.com/user-attachments/assets/fe37707c-db14-4673-9e15-5e4d52d1d2da" controls="controls" controlsList="nodownload" style="max-width: 100%;">
 </video>
 
-### Settings
+## ✨ Key Features
+
+-   **🤖 Multi-Provider Support**:
+    -   **OpenAI**: Access GPT-4 and other models with your API key.
+    -   **Google Gemini**: Leverage Google's latest Gemini models.
+    -   **Ollama**: Run open-source models (Llama 3, Mistral, etc.) locally for complete privacy.
+
+-   **🔒 Privacy-First Architecture**:
+    -   API keys are stored strictly in your browser's `localStorage`.
+    -   No backend server is required; requests go directly from your browser to the LLM provider.
+    -   Option for 100% offline usage with Ollama and local embeddings.
+
+-   **🧠 Intelligent Knowledge Base**:
+    -   **Vector Search**: Uses **ChromaDB** (with IndexedDB fallback) for efficient semantic search.
+    -   **Document Processing**: Upload PDFs or scrape web pages to build your personal knowledge base.
+    -   **Local Embeddings**: Generates vector embeddings directly in the browser using `@xenova/transformers`.
+
+-   **🎙️ Voice Interaction**:
+    -   **Voice Input**: Speak your queries naturally using the integrated speech recognition.
+    -   **Text-to-Speech**: Listen to AI responses for a hands-free experience.
+
+-   **🎨 Modern UI/UX**:
+    -   Responsive, glassmorphism-inspired design.
+    -   Real-time streaming responses with Markdown rendering.
+    -   Dark/Light mode support (system preference).
+
+## 🛠️ Tech Stack
+
+-   **Frontend**: [React 19](https://react.dev/), [TypeScript](https://www.typescriptlang.org/), [Vite](https://vitejs.dev/)
+-   **Styling**: Vanilla CSS (Custom Design System)
+-   **AI & ML**:
+    -   [LangChain](https://js.langchain.com/) (Concepts)
+    -   [@xenova/transformers](https://huggingface.co/docs/transformers.js) (In-browser embeddings)
+    -   [Ollama](https://ollama.com/) (Local LLM)
+-   **Storage**:
+    -   [ChromaDB](https://www.trychroma.com/) (Vector Store)
+    -   IndexedDB & LocalStorage
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+-   **Node.js** (v18 or higher)
+-   **Ollama** (Optional, for local models): [Download Ollama](https://ollama.com/)
+
+### Installation
+
+1.  **Clone the repository**:
+    ```bash
+    git clone https://github.com/sunipa21/AI_Enabled_Knowledge_Management.git
+    cd AI_Enabled_Knowledge_Management
+    ```
+
+2.  **Install dependencies**:
+    ```bash
+    npm install
+    ```
+
+3.  **Start the development server**:
+    ```bash
+    npm run dev
+    ```
+
+4.  **Open the app**:
+    Visit `http://localhost:5173` in your browser.
+
+## ⚙️ Configuration
+
+### Setting up LLM Providers
+
+Access the **Settings** panel by clicking the gear icon in the application.
+
+1.  **OpenAI / Google Gemini**:
+    -   Enter your API Key in the respective field.
+    -   The key is saved locally to your browser.
+
+2.  **Ollama (Local)**:
+    -   Ensure Ollama is running (`ollama serve`).
+    -   The app defaults to `http://localhost:11434`.
+    -   **Note**: You may need to configure CORS for Ollama. Run Ollama with:
+        ```bash
+        OLLAMA_ORIGINS="*" ollama serve
+        ```
+
+### Screenshots
+
+**Settings Interface:**
 ![Settings_Huggingface](https://github.com/user-attachments/assets/08c31ca7-5af0-4d86-a836-53851bbf7918)
 ![Settings_Ollama](https://github.com/user-attachments/assets/af46189d-c553-4d31-a1a4-040b48374f94)
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## 📄 License
+
+This project is licensed under the MIT License.
