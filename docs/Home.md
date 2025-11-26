@@ -33,6 +33,9 @@ Technical reference for developers working on the codebase.
 - Custom Hooks
 - Type Definitions
 
+### [workflow Git Workflow](Git-Workflow.md)
+Best practices for branching, committing, and pushing code.
+
 ---
 
 ## 🤝 Contributing
