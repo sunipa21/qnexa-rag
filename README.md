@@ -67,10 +67,6 @@ export default defineConfig([
         tsconfigRootDir: import.meta.dirname,
       },
       // other options...
-
-<img width="1915" height="1034" alt="Settings_Huggingface" src="https://github.com/user-attachments/assets/08c31ca7-5af0-4d86-a836-53851bbf7918" />
-<img width="1914" height="1035" alt="Settings_Ollama" src="https://github.com/user-attachments/assets/af46189d-c553-4d31-a1a4-040b48374f94" />
-<img width="1920" height="1036" alt="Application" src="https://github.com/user-attachments/assets/c4f0fbe8-d8a9-4c98-a2ed-693f73ae942f" />
     },
   },
 ])
