@@ -26,7 +26,7 @@ export function useVoice(options: UseVoiceOptions = {}): UseVoiceResult {
     const [error, setError] = useState<string | null>(null);
     const [isSupported] = useState(() => speechRecognitionService.isSupported());
 
-    const timeoutRef = useRef<number>();
+    const timeoutRef = useRef<number | null>(null);
 
     const {
         language = 'en-US',
@@ -70,6 +70,8 @@ export function useVoice(options: UseVoiceOptions = {}): UseVoiceResult {
                         if (!continuous) {
                             timeoutRef.current = window.setTimeout(() => {
                                 onTranscriptComplete?.(newTranscript.trim());
+                                setTranscript('');
+                                setInterimTranscript('');
                             }, 500);
                         }
 
@@ -110,6 +112,7 @@ export function useVoice(options: UseVoiceOptions = {}): UseVoiceResult {
         const finalTranscript = transcript || interimTranscript;
         if (finalTranscript) {
             onTranscriptComplete?.(finalTranscript.trim());
+            resetTranscript();
         }
     }, [transcript, interimTranscript, onTranscriptComplete]);
 

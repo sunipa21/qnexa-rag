@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Settings } from './components/Settings';
+import { SettingsModal } from './components/SettingsModal';
 import { ChatInterface } from './components/ChatInterface';
 import { KnowledgeBase } from './components/KnowledgeBase';
 import type { LLMConfig } from './types';
@@ -28,8 +28,14 @@ function App() {
     return saved ? JSON.parse(saved) : true;
   });
 
+  const [useWebSearch, setUseWebSearch] = useState(() => {
+    const saved = localStorage.getItem('use_web_search');
+    return saved ? JSON.parse(saved) : false;
+  });
+
   const [sidebarWidth, setSidebarWidth] = useState(480);
   const [isResizing, setIsResizing] = useState(false);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   useEffect(() => {
     localStorage.setItem('llm_config', JSON.stringify(config));
@@ -38,6 +44,10 @@ function App() {
   useEffect(() => {
     localStorage.setItem('use_knowledge_base', JSON.stringify(useKnowledgeBase));
   }, [useKnowledgeBase]);
+
+  useEffect(() => {
+    localStorage.setItem('use_web_search', JSON.stringify(useWebSearch));
+  }, [useWebSearch]);
 
   const startResizing = () => {
     setIsResizing(true);
@@ -68,7 +78,14 @@ function App() {
   return (
     <div className="app-container">
       <header className="app-header">
-        <h1>AI Knowledge Manager</h1>
+        <img src="/qnexa-logo.png" alt="Qnexa AI - The Central Nexus for Intelligent Queries" className="app-logo" />
+        <button
+          className="settings-icon-btn"
+          onClick={() => setIsSettingsOpen(true)}
+          title="Settings"
+        >
+          ⚙️
+        </button>
       </header>
 
       <main className="main-content">
@@ -76,16 +93,25 @@ function App() {
           className="sidebar"
           style={{ width: sidebarWidth, minWidth: sidebarWidth }}
         >
-          <Settings config={config} onConfigChange={setConfig} />
-
           <div className="kb-toggle-section">
             <label className="kb-toggle-label">
+              <span>Use Knowledge Base</span>
               <input
                 type="checkbox"
                 checked={useKnowledgeBase}
                 onChange={(e) => setUseKnowledgeBase(e.target.checked)}
               />
-              <span>Use Knowledge Base</span>
+            </label>
+          </div>
+
+          <div className="kb-toggle-section">
+            <label className="kb-toggle-label">
+              <span>🔍 Search Web</span>
+              <input
+                type="checkbox"
+                checked={useWebSearch}
+                onChange={(e) => setUseWebSearch(e.target.checked)}
+              />
             </label>
           </div>
 
@@ -95,9 +121,16 @@ function App() {
         </aside>
 
         <section className="chat-section">
-          <ChatInterface config={config} useKnowledgeBase={useKnowledgeBase} />
+          <ChatInterface config={config} useKnowledgeBase={useKnowledgeBase} useWebSearch={useWebSearch} />
         </section>
       </main>
+
+      <SettingsModal
+        isOpen={isSettingsOpen}
+        onClose={() => setIsSettingsOpen(false)}
+        config={config}
+        onConfigChange={setConfig}
+      />
     </div>
   );
 }

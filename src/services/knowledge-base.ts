@@ -11,6 +11,7 @@ export interface Document {
     source: 'pdf' | 'url' | 'search';
     sourceUrl?: string;
     hasEmbeddings?: boolean; // Track if embeddings have been generated
+    includeInQueries?: boolean; // Track if document should be included in queries
 }
 
 const STORAGE_KEY = 'knowledge_base_documents';
@@ -108,6 +109,7 @@ export class KnowledgeBase {
             source,
             sourceUrl,
             hasEmbeddings: false,
+            includeInQueries: true, // Include in queries by default
         };
 
         this.documents.push(doc);
@@ -180,6 +182,16 @@ export class KnowledgeBase {
      */
     async searchDocuments(query: string, topK: number = 3): Promise<string[]> {
         try {
+            // Get IDs of documents to include
+            const includedDocIds = this.documents
+                .filter(d => d.includeInQueries !== false)
+                .map(d => d.id);
+
+            if (includedDocIds.length === 0) {
+                console.warn('No documents selected for queries');
+                return [];
+            }
+
             // Generate embedding for query
             const queryEmbedding = await generateEmbedding(
                 query,
@@ -194,6 +206,9 @@ export class KnowledgeBase {
             } else {
                 results = await vectorDB.search(queryEmbedding, topK);
             }
+
+            // Filter results to only include selected documents
+            results = results.filter(r => includedDocIds.includes(r.metadata.docId));
 
             // Format results with citations
             return results.map(r => {
@@ -290,6 +305,17 @@ export class KnowledgeBase {
 
     getTotalSize(): number {
         return this.documents.reduce((sum, doc) => sum + doc.content.length, 0);
+    }
+
+    /**
+     * Toggle whether a document should be included in queries
+     */
+    toggleDocumentInclusion(docId: string, include: boolean): void {
+        const doc = this.documents.find(d => d.id === docId);
+        if (doc) {
+            doc.includeInQueries = include;
+            this.saveToStorage();
+        }
     }
 
     async clear(): Promise<void> {

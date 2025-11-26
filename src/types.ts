@@ -4,7 +4,7 @@ export type LLMMessage = {
 };
 
 export type LLMConfig = {
-    provider: 'openai' | 'gemini' | 'ollama';
+    provider: 'openai' | 'gemini' | 'ollama' | 'huggingface';
     apiKey?: string;
     model: string;
     baseUrl?: string;

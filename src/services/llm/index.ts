@@ -2,6 +2,7 @@ import type { LLMMessage, LLMConfig, LLMProvider } from '../../types';
 import { OpenAIProvider } from './openai';
 import { GeminiProvider } from './gemini';
 import { OllamaProvider } from './ollama';
+import { HuggingFaceProvider } from './huggingface';
 
 export const streamCompletion = async function* (
     messages: LLMMessage[],
@@ -18,6 +19,9 @@ export const streamCompletion = async function* (
             break;
         case 'ollama':
             provider = OllamaProvider;
+            break;
+        case 'huggingface':
+            provider = HuggingFaceProvider;
             break;
         default:
             throw new Error(`Unknown provider: ${config.provider}`);

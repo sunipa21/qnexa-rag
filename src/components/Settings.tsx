@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import type { LLMConfig } from '../types';
 import { OpenAIProvider } from '../services/llm/openai';
-
 import { OllamaProvider } from '../services/llm/ollama';
+import { HuggingFaceProvider } from '../services/llm/huggingface';
 
 interface SettingsProps {
     config: LLMConfig;
@@ -25,9 +25,21 @@ export const Settings: React.FC<SettingsProps> = ({ config, onConfigChange }) =>
                 fetchedModels = await OpenAIProvider.getModels(config);
             } else if (config.provider === 'gemini') {
                 // Gemini models are static for now or fetched if key exists
-                fetchedModels = ['gemini-1.5-flash', 'gemini-1.5-pro', 'gemini-1.0-pro'];
+                fetchedModels = [
+                    'gemini-2.5-flash',
+                    'gemini-2.5-flash-lite',
+                    'gemini-2.5-flash-native-audio-preview-09-2025',
+                    'gemini-2.0-flash',
+                    'gemini-2.0-flash-lite',
+                    'gemini-1.5-flash',
+                    'gemini-1.5-pro',
+                    'gemini-1.0-pro',
+                    'gemini-3-pro-image-preview'
+                ];
             } else if (config.provider === 'ollama') {
                 fetchedModels = await OllamaProvider.getModels(config);
+            } else if (config.provider === 'huggingface') {
+                fetchedModels = await HuggingFaceProvider.getModels(config);
             }
             setModels(fetchedModels);
 
@@ -44,7 +56,7 @@ export const Settings: React.FC<SettingsProps> = ({ config, onConfigChange }) =>
 
     return (
         <div className="settings-panel">
-            <h2>Settings</h2>
+            <h2>LLM Settings</h2>
 
             <div className="form-group">
                 <label>Provider</label>
@@ -55,6 +67,7 @@ export const Settings: React.FC<SettingsProps> = ({ config, onConfigChange }) =>
                     <option value="openai">OpenAI</option>
                     <option value="gemini">Google Gemini</option>
                     <option value="ollama">Ollama (Local)</option>
+                    <option value="huggingface">Hugging Face</option>
                 </select>
             </div>
 
@@ -80,6 +93,32 @@ export const Settings: React.FC<SettingsProps> = ({ config, onConfigChange }) =>
                         placeholder="AIza..."
                     />
                 </div>
+            )}
+
+            {config.provider === 'huggingface' && (
+                <>
+                    <div className="form-group">
+                        <label>API Key</label>
+                        <input
+                            type="password"
+                            value={config.apiKey || ''}
+                            onChange={(e) => onConfigChange({ ...config, apiKey: e.target.value })}
+                            placeholder="hf_..."
+                        />
+                    </div>
+                    <div className="form-group">
+                        <label>Base URL (optional)</label>
+                        <input
+                            type="text"
+                            value={config.baseUrl || ''}
+                            onChange={(e) => onConfigChange({ ...config, baseUrl: e.target.value })}
+                            placeholder="https://api-inference.huggingface.co/models"
+                        />
+                        <small style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: '0.25rem', display: 'block' }}>
+                            Leave empty for default HF Inference API
+                        </small>
+                    </div>
+                </>
             )}
 
             {config.provider === 'ollama' && (

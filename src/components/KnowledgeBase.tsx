@@ -330,6 +330,18 @@ export const KnowledgeBase: React.FC = () => {
                 ) : (
                     documents.map(doc => (
                         <div key={doc.id} className="kb-document-item">
+                            <label className="kb-doc-checkbox-container">
+                                <input
+                                    type="checkbox"
+                                    checked={doc.includeInQueries !== false}
+                                    onChange={(e) => {
+                                        knowledgeBase.toggleDocumentInclusion(doc.id, e.target.checked);
+                                        loadDocuments();
+                                    }}
+                                    className="kb-doc-checkbox"
+                                    title="Include in queries"
+                                />
+                            </label>
                             <div className="kb-doc-info">
                                 <div className="kb-doc-name" title={doc.sourceUrl || doc.name}>
                                     <span className="kb-source-icon">{getSourceIcon(doc.source)}</span>

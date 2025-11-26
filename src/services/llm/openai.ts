@@ -63,7 +63,7 @@ export const OpenAIProvider: LLMProvider = {
     },
 
     async getModels(config: LLMConfig) {
-        if (!config.apiKey) return ['gpt-4o', 'gpt-4-turbo', 'gpt-3.5-turbo'];
+        if (!config.apiKey) return ['gpt-4o', 'gpt-4o-mini', 'gpt-4-turbo', 'gpt-3.5-turbo'];
 
         try {
             const response = await fetch('https://api.openai.com/v1/models', {
@@ -81,7 +81,7 @@ export const OpenAIProvider: LLMProvider = {
                 .sort();
         } catch (e) {
             console.error('Error fetching OpenAI models:', e);
-            return ['gpt-4o', 'gpt-4-turbo', 'gpt-3.5-turbo'];
+            return ['gpt-4o', 'gpt-4o-mini', 'gpt-4-turbo', 'gpt-3.5-turbo'];
         }
     }
 };

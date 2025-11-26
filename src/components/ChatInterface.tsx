@@ -6,13 +6,14 @@ import { OpenAIProvider } from '../services/llm/openai';
 import { GeminiProvider } from '../services/llm/gemini';
 import { OllamaProvider } from '../services/llm/ollama';
 import { knowledgeBase } from '../services/knowledge-base';
-import { searchDuckDuckGo, detectSearchIntent, extractUrls } from '../services/web-search';
+import { searchDuckDuckGo } from '../services/web-search';
 import { fetchUrlContent, getDomainFromUrl } from '../services/web-scraper';
 import { VoiceInput } from './VoiceInput';
 
 interface ChatInterfaceProps {
     config: LLMConfig;
     useKnowledgeBase: boolean;
+    useWebSearch: boolean;
 }
 
 const UserAvatar = () => (
@@ -32,7 +33,7 @@ const BotAvatar = () => (
     </div>
 );
 
-export const ChatInterface: React.FC<ChatInterfaceProps> = ({ config, useKnowledgeBase }) => {
+export const ChatInterface: React.FC<ChatInterfaceProps> = ({ config, useKnowledgeBase, useWebSearch }) => {
     const [messages, setMessages] = useState<LLMMessage[]>([]);
     const [input, setInput] = useState('');
     const [isLoading, setIsLoading] = useState(false);
@@ -58,6 +59,18 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({ config, useKnowled
         setInput('');
         setIsLoading(true);
 
+        // Enforce source selection
+        if (!useKnowledgeBase && !useWebSearch) {
+            setTimeout(() => {
+                setMessages(prev => [...prev, {
+                    role: 'assistant',
+                    content: 'Please enable **Use Knowledge Base** or **🔍 Search Web** to proceed.\n\nYou also need to ensure you have added content (PDFs or Web links) for me to answer your queries.'
+                }]);
+                setIsLoading(false);
+            }, 500);
+            return;
+        }
+
         try {
             let provider: LLMProvider;
             switch (config.provider) {
@@ -69,59 +82,53 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({ config, useKnowled
 
             const newMessages = [...messages, userMessage];
             let messagesToSend = newMessages;
+            let webSearchContext = '';
 
-            // Auto-fetch URLs and web search if knowledge base is enabled
-            if (useKnowledgeBase) {
-                // Check for URLs in the message
-                const urls = extractUrls(textToSend);
-                if (urls.length > 0) {
-                    for (const url of urls.slice(0, 2)) { // Limit to 2 URLs
+            // Web Search - fetch top 5 URLs if enabled
+            if (useWebSearch) {
+                setWebStatus('🔍 Searching the web...');
+                try {
+                    const searchResults = await searchDuckDuckGo(textToSend, 5);
+                    setWebStatus(`📄 Fetching content from ${searchResults.length} URLs...`);
+
+                    const contentPromises = searchResults.map(async (result, index) => {
                         try {
-                            const content = await fetchUrlContent(url, (status) => {
-                                setWebStatus(status);
-                            });
-                            const domain = getDomainFromUrl(url);
-                            knowledgeBase.addDocument(
-                                domain,
-                                content,
-                                'url',
-                                url
-                            );
+                            setWebStatus(`📄 Fetching ${index + 1}/${searchResults.length}: ${getDomainFromUrl(result.url)}...`);
+                            const content = await fetchUrlContent(result.url);
+                            // Limit content to first 2000 characters
+                            const truncatedContent = content.slice(0, 2000);
+                            return {
+                                title: result.title,
+                                url: result.url,
+                                content: truncatedContent,
+                                snippet: result.snippet
+                            };
                         } catch (err) {
-                            console.error('Failed to fetch URL:', url, err);
+                            console.error('Failed to fetch URL:', result.url, err);
+                            return null;
                         }
+                    });
+
+                    const results = await Promise.allSettled(contentPromises);
+                    const successfulResults = results
+                        .filter((r): r is PromiseFulfilledResult<any> => r.status === 'fulfilled' && r.value !== null)
+                        .map(r => r.value);
+
+                    if (successfulResults.length > 0) {
+                        webSearchContext = successfulResults.map((result, idx) =>
+                            `${idx + 1}. **${result.title}** - ${result.url}\n${result.snippet}\n\nContent:\n${result.content}`
+                        ).join('\n\n---\n\n');
                     }
                     setWebStatus('');
-                }
-
-                // Check for search intent
-                if (detectSearchIntent(textToSend)) {
-                    setWebStatus('Searching the web...');
-                    try {
-                        const searchResults = await searchDuckDuckGo(textToSend, 3);
-                        setWebStatus(`Fetching ${searchResults.length} search results...`);
-
-                        for (const result of searchResults) {
-                            try {
-                                const content = await fetchUrlContent(result.url);
-                                const domain = getDomainFromUrl(result.url);
-                                knowledgeBase.addDocument(
-                                    `${domain} - ${result.title}`,
-                                    content,
-                                    'search',
-                                    result.url
-                                );
-                            } catch (err) {
-                                console.error('Failed to fetch search result:', result.url, err);
-                            }
-                        }
-                    } catch (err) {
-                        console.error('Web search failed:', err);
-                    }
+                } catch (err) {
+                    console.error('Web search failed:', err);
                     setWebStatus('');
                 }
+            }
 
-                // Search knowledge base if enabled
+            // Knowledge Base search if enabled
+            if (useKnowledgeBase) {
+                // Search knowledge base
                 const relevantChunks = await knowledgeBase.searchDocuments(textToSend, 3);
                 if (relevantChunks.length > 0) {
                     const context = relevantChunks.join('\n\n---\n\n');
@@ -142,6 +149,27 @@ ${context}
 If the sources don't contain relevant information, you may use your general knowledge but clearly indicate when you're doing so.`
                     };
                     messagesToSend = [systemMessage, ...newMessages];
+                }
+            }
+
+            // Add web search context if available
+            if (webSearchContext) {
+                const webSystemMessage: LLMMessage = {
+                    role: 'system',
+                    content: `You are answering based on current web search results. Use this information to provide an accurate, up-to-date answer.
+
+Search Query: "${textToSend}"
+
+WEB SEARCH RESULTS:
+${webSearchContext}
+
+Please answer the user's question using the above search results. Cite sources by mentioning the title and URL.`
+                };
+                // If there's already a system message, combine them
+                if (messagesToSend[0]?.role === 'system') {
+                    messagesToSend[0].content = webSystemMessage.content + '\n\n---\n\n' + messagesToSend[0].content;
+                } else {
+                    messagesToSend = [webSystemMessage, ...messagesToSend];
                 }
             }
 
