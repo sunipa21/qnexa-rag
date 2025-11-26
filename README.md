@@ -76,7 +76,7 @@ export default defineConfig([
 ## 🎥 Project Demo
 Check out the application in action:
 
-<video src="https://github.com/user-attachments/assets/fe37707c-db14-4673-9e15-5e4d52d1d2da" controls="controls" style="max-width: 600px;">
+<video src="https://github.com/user-attachments/assets/fe37707c-db14-4673-9e15-5e4d52d1d2da" controls="controls" controlsList="nodownload" style="max-width: 100%;">
 </video>
 
 ### Settings
