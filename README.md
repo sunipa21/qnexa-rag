@@ -73,7 +73,11 @@ export default defineConfig([
 ])
 ```
 ### Application
-![Application](https://github.com/user-attachments/assets/fe37707c-db14-4673-9e15-5e4d52d1d2da)
+## 🎥 Project Demo
+Check out the application in action:
+
+<video src="https://github.com/user-attachments/assets/fe37707c-db14-4673-9e15-5e4d52d1d2da" controls="controls" style="max-width: 600px;">
+</video>
 
 ### Settings
 ![Settings_Huggingface](https://github.com/user-attachments/assets/08c31ca7-5af0-4d86-a836-53851bbf7918)
