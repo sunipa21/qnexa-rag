@@ -8,12 +8,8 @@ Built with **React 19**, **TypeScript**, and **Vite**, Qnexa AI offers a premium
 
 Check out the application in action:
 
-<h3 align="center">Anexa AI Application Demo</h3>
-<div align="center">
-  <a href="https://www.youtube.com/watch?v=m8MbVdiHYt8">
-    <img src="https://img.youtube.com/vi/m8MbVdiHYt8/maxresdefault.jpg" alt="Watch the Anexa AI Demo" style="width: 100%; max-width: 600px;">
-  </a>
-</div>
+<video src="https://github.com/user-attachments/assets/fe37707c-db14-4673-9e15-5e4d52d1d2da" controls="controls" style="max-width: 100%;">
+</video>
 
 ## ✨ Key Features
 
