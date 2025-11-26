@@ -71,3 +71,15 @@ export default defineConfig([
   },
 ])
 ```
+<details>
+  <summary>Click to view Configuration/Settings Screenshots</summary>
+  
+  <br>
+  <strong>Hugging Face Settings:</strong><br>
+  <img src="https://github.com/user-attachments/assets/08c31ca7-5af0-4d86-a836-53851bbf7918" width="800">
+  
+  <br><br>
+  
+  <strong>Ollama Settings:</strong><br>
+  <img src="https://github.com/user-attachments/assets/af46189d-c553-4d31-a1a4-040b48374f94" width="800">
+</details>
