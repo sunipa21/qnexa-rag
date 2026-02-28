@@ -116,8 +116,8 @@ User Input
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/sunipa21/AI_Enabled_Knowledge_Management.git
-cd AI_Enabled_Knowledge_Management
+git clone https://github.com/sunipa21/qnexa-rag.git
+cd qnexa-rag
 
 # 2. Install dependencies
 npm install
@@ -189,7 +189,7 @@ Configure in Settings → Embeddings:
 ## 📂 Project Structure
 
 ```
-AI_Enabled_Knowledge_Management/
+qnexa-rag/
 ├── public/                     # Static assets
 ├── src/
 │   ├── components/             # UI components

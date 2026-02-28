@@ -17,8 +17,8 @@ Before you begin, ensure you have the following installed:
 
 1.  **Clone the Repository**
     ```bash
-    git clone https://github.com/sunipa21/AI_Enabled_Knowledge_Management.git
-    cd AI_Enabled_Knowledge_Management
+    git clone https://github.com/sunipa21/qnexa-rag.git
+    cd qnexa-rag
     ```
 
 2.  **Install Dependencies**
