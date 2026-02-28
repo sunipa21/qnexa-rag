@@ -1,6 +1,6 @@
 # Welcome to the Qnexa AI Wiki
 
-Welcome to the official documentation for **Qnexa AI**, the privacy-focused Knowledge Management Application.
+Welcome to the official documentation for **Qnexa AI** — a RAG-Powered Knowledge Hub built for privacy-first, multi-provider AI interactions.
 
 This wiki serves as the central repository for all technical and user documentation.
 
