@@ -230,6 +230,19 @@ AI_Enabled_Knowledge_Management/
 
 ---
 
+## 🌐 Hosting & Scaling
+
+Qnexa AI is a **fully static application** — the server only delivers HTML, CSS, and JavaScript files. Everything else runs inside the user's own browser.
+
+**Zero server cost at any scale.** Deploy the `dist/` folder to any static host (Vercel, Netlify, GitHub Pages, S3). 100 concurrent users means zero shared server state and zero cross-user conflict — each user's API key, knowledge base, and settings live entirely within their own browser's `localStorage` and `IndexedDB`.
+
+> ⚠️ **Bring Your Own Key (BYOK)**
+> Each user must supply their own API key (OpenAI, Gemini, or HuggingFace) via the Settings panel before using the app. Keys are stored locally in their browser and sent **directly** to the chosen LLM provider — they never pass through any intermediary server. If a user switches devices or browsers, they will need to re-enter their key.
+
+For usage with **Ollama**, no API key is required — the app connects to the user's locally running Ollama instance.
+
+---
+
 ## 🗺️ Roadmap
 
 - [ ] Support for more document formats (DOCX, TXT, Markdown)
