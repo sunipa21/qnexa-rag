@@ -12,7 +12,7 @@ Qnexa AI is a **client-side first** application. It relies heavily on browser AP
 
 ### AI & Machine Learning
 -   **@xenova/transformers**: Runs transformer models (like embedding generation) directly in the browser using WebAssembly.
--   **LangChain Concepts**: The architecture draws inspiration from LangChain's chains and retrieval mechanisms, though implemented custom for this lightweight app.
+-   **Custom RAG Pipeline**: A hand-rolled Retrieval-Augmented Generation pipeline — no third-party framework. Handles chunking, embedding, vector retrieval, and prompt construction natively.
 -   **Ollama Integration**: Direct REST API integration with local Ollama instances.
 
 ### Data Storage

@@ -145,7 +145,7 @@ class TextToSpeechService {
      * Check if currently speaking
      */
     isSpeaking(): boolean {
-        return this.synth.speaking;
+        return this.synth.speaking && this.currentUtterance !== null;
     }
 
     /**
