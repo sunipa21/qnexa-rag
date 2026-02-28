@@ -1,4 +1,4 @@
-# Qnexa AI — Intelligent Knowledge Management
+# Qnexa AI — RAG-Powered Knowledge Hub
 
 ![React](https://img.shields.io/badge/React-19-61DAFB?style=flat&logo=react&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?style=flat&logo=typescript&logoColor=white)
